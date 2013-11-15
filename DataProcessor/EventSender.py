@@ -16,7 +16,7 @@ class EventSender:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((host, self.socket_port))
         except:
-            self.logger.log("Couldn't open the socket to send messages. Is the sound engine up?")
+            self.logger.debug("Couldn't open the socket to send messages. Is the sound engine up?")
             raise
 
     def send_event(self, json_event):
