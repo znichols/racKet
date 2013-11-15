@@ -6,11 +6,12 @@ import simplejson as json
 class BufferHandler(asyncore.dispatcher_with_send):
     def __init__(self, sock):
         asyncore.dispatcher_with_send.__init__(self, sock)
-        self.message_list = message_list
+        #self.message_list = message_list
     def handle_read(self):
         data = self.recv(1024)
         if data:
             print data
+            sys.exit(0)
 
 class MockServer(asyncore.dispatcher):
     def __init__(self, host, port):
@@ -26,15 +27,12 @@ class MockServer(asyncore.dispatcher):
             handler = BufferHandler(sock)
 
 def main():
-    configfile = sys.argv[0]
-    config = json.load(configfile, 'r')
+    configfile = sys.argv[1]
+    config = json.load(open(configfile, 'r'))
     host = socket.gethostname()
     port = config['socket_port']
     server = MockServer(host, port)
-    asyncore.loop(
-
-
-
+    asyncore.loop(5)
 
 if __name__ == '__main__':
     main()
