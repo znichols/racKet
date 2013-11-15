@@ -1,0 +1,6 @@
+{
+    "socket_port": 7651,
+    "column_types": ["categorical", "binary", "continuous"],
+    "sound_bank": "synth_waves",
+    "dimensions": ["pitch", "wave_type", "modulation"] 
+}

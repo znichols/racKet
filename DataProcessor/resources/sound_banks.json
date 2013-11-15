@@ -1,0 +1,22 @@
+{
+    "synth_waves": 
+    {
+        "pitch":
+        {
+            "type" = "categorical",
+            "values" = ["587.3", "659.3", "740.0", "880.0", "987.8", "1174.7"]
+        },
+        "wave_type":
+        {
+            "type": "categorical",
+            "values" = ["square", "triangle", "sine"]
+        },
+        "modulation":
+        {
+            "type": "continuous",
+            "values" = ["0", "1"]
+        }
+    }
+}
+        
+
