@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 
 import unittest
-import socket, time
+import socket, time, datetime
 import simplejson as json
 from subprocess import Popen, PIPE
 
 import DataProcessor, EventSender
-
-class TestConvertingData(unittest.TestCase):
-    pass
 
 class TestSendingEvent(unittest.TestCase):
     def setUp(self):
@@ -60,6 +57,21 @@ class TestReadingConfig(unittest.TestCase):
         self.assertEqual(ds.config['sound_bank'], this_config['sound_bank'])
     def tearDown(self):
         self.server_process.terminate()
+
+class TestConvertingData(unittest.TestCase):
+    def setUp(self):
+        self.config = json.load(open('resources/config.json', 'r'))
+        self.server_process = Popen(['python', 'MockServer.py', 'resources/config.json'], stdout=PIPE)
+        time.sleep(1)
+    def test_data_conversion(self):
+        ds = DataProcessor.DataProcessor('resources/config.json')
+        data_row = ['2012-08-24T17:17:08', '15875642', 'True', '12']
+        expected_formatted_row = [datetime.datetime(2012, 8, 24, 17, 17, 8), 1, True, 12.0]
+        formatted_row = ds.format_func(data_row)
+        self.assertEquals(formatted_row, expected_formatted_row)
+    def tearDown(self):
+        self.server_process.terminate()
+    
 
 class TestRescalingData(unittest.TestCase):
     pass
