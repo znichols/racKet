@@ -72,9 +72,20 @@ class TestConvertingData(unittest.TestCase):
     def tearDown(self):
         self.server_process.terminate()
     
-
-class TestRescalingData(unittest.TestCase):
-    pass
+class TestCSVSending(unittest.TestCase):
+    def setUp(self):
+        self.config = json.load(open('resources/config.json', 'r'))
+        self.server_process = Popen(['python', 'MockServer.py', 'resources/config.json'], stdout=PIPE)
+        time.sleep(1)
+    def test_sending_data(self):
+        ds = DataProcessor.DataProcessor('resources/config.json')
+        ds.import_csv_file('resources/mock_data.csv')
+        ds.send_data(2.)
+        ds.event_sender.send_exit_event()
+        out = self.server_process.stdout.read().split('\n')
+        self.assertEquals(len(out), 31)
+    def tearDown(self):
+        self.server_process.terminate()
 
 if __name__=='__main__':
     unittest.main()
