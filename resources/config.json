@@ -1,7 +1,7 @@
 {
     "socket_port": 7651,
     "column_types": ["datetime", "categorical", "binary", "continuous"],
-    "sound_bank_definitions_file": "resources/sound_banks.json",
+    "sound_bank_definitions_file": "../resources/sound_banks.json",
     "sound_bank": "synth_waves",
     "dimensions": ["time", "pitch", "wave_type", "modulation"] 
 }

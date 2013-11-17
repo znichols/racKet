@@ -9,9 +9,9 @@ import DataProcessor, EventSender
 
 class TestSendingEvent(unittest.TestCase):
     def setUp(self):
-        self.config = json.load(open('resources/config.json', 'r'))
+        self.config = json.load(open('../resources/config.json', 'r'))
         port = self.config['socket_port']
-        self.server_process = Popen(['python', 'MockServer.py', 'resources/config.json'], stdout=PIPE)
+        self.server_process = Popen(['python', 'MockServer.py', '../resources/config.json'], stdout=PIPE)
         time.sleep(1)
         self.client = EventSender.EventSender(port)
     def test_send_event(self):
@@ -26,9 +26,9 @@ class TestSendingEvent(unittest.TestCase):
 
 class TestSendingMultipleEvents(unittest.TestCase):
     def setUp(self):
-        self.config = json.load(open('resources/config.json', 'r'))
+        self.config = json.load(open('../resources/config.json', 'r'))
         port = self.config['socket_port']
-        self.server_process = Popen(['python', 'MockServer.py', 'resources/config.json'], stdout=PIPE)
+        self.server_process = Popen(['python', 'MockServer.py', '../resources/config.json'], stdout=PIPE)
         time.sleep(1)
         self.client = EventSender.EventSender(port)
     def test_send_event(self):
@@ -47,12 +47,12 @@ class TestSendingMultipleEvents(unittest.TestCase):
 
 class TestReadingConfig(unittest.TestCase):
     def setUp(self):
-        self.config = json.load(open('resources/config.json', 'r'))
-        self.server_process = Popen(['python', 'MockServer.py', 'resources/config.json'], stdout=PIPE)
+        self.config = json.load(open('../resources/config.json', 'r'))
+        self.server_process = Popen(['python', 'MockServer.py', '../resources/config.json'], stdout=PIPE)
         time.sleep(1)
     def test_config_reading(self):
-        ds = DataProcessor.DataProcessor('resources/config.json')
-        this_config = json.load(open('resources/config.json', 'r'))
+        ds = DataProcessor.DataProcessor('../resources/config.json')
+        this_config = json.load(open('../resources/config.json', 'r'))
         self.assertEqual(ds.config['socket_port'], this_config['socket_port'])
         self.assertEqual(ds.config['sound_bank'], this_config['sound_bank'])
     def tearDown(self):
@@ -60,11 +60,11 @@ class TestReadingConfig(unittest.TestCase):
 
 class TestConvertingData(unittest.TestCase):
     def setUp(self):
-        self.config = json.load(open('resources/config.json', 'r'))
-        self.server_process = Popen(['python', 'MockServer.py', 'resources/config.json'], stdout=PIPE)
+        self.config = json.load(open('../resources/config.json', 'r'))
+        self.server_process = Popen(['python', 'MockServer.py', '../resources/config.json'], stdout=PIPE)
         time.sleep(1)
     def test_data_conversion(self):
-        ds = DataProcessor.DataProcessor('resources/config.json')
+        ds = DataProcessor.DataProcessor('../resources/config.json')
         data_row = ['2012-08-24T17:17:08', '15875642', 'True', '12']
         expected_formatted_row = [datetime.datetime(2012, 8, 24, 17, 17, 8), 1, True, 12.0]
         formatted_row = ds.format_func(data_row)
@@ -74,12 +74,12 @@ class TestConvertingData(unittest.TestCase):
     
 class TestCSVSending(unittest.TestCase):
     def setUp(self):
-        self.config = json.load(open('resources/config.json', 'r'))
-        self.server_process = Popen(['python', 'MockServer.py', 'resources/config.json'], stdout=PIPE)
+        self.config = json.load(open('../resources/config.json', 'r'))
+        self.server_process = Popen(['python', 'MockServer.py', '../resources/config.json'], stdout=PIPE)
         time.sleep(1)
     def test_sending_data(self):
-        ds = DataProcessor.DataProcessor('resources/config.json')
-        ds.import_csv_file('resources/mock_data.csv')
+        ds = DataProcessor.DataProcessor('../resources/config.json')
+        ds.import_csv_file('../resources/mock_data.csv')
         ds.send_data(2.)
         ds.event_sender.send_exit_event()
         out = self.server_process.stdout.read().split('\n')
