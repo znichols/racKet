@@ -14,7 +14,7 @@
         "modulation":
         {
             "type": "continuous",
-            "values" : ["0", "1"]
+            "values" : [0, 1]
         }
     }
 }
