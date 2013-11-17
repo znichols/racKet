@@ -1,17 +1,12 @@
 #!/usr/bin/env python
 
-import csv
+import csv, time
 import simplejson as json
 from dateutil import parser
 import numpy as np
 
 import EventSender
 from DataProcessingException import DataProcessingException
-
-class SoundEvent:
-    """Object to hold events for serializing and sending to the sound engine"""
-    def __init__(self):
-        pass
 
 class DataProcessor:
     """Class for setting up the event sending client, for reading in data to send
@@ -24,19 +19,18 @@ class DataProcessor:
         self.format_func = make_formatter(self.config)
         self.data = None
         self._check_config()
-
-    def send_event(self, event):
-        pass
+        self.chunk_interval = 0.033 #time in s to wait between sending bursts. Shouldn't make this too small
 
     def import_csv_file(self, csvfile):
+        """Load a csv file with the column datatypes specified in the config"""
         reader = csv.reader(open(csvfile, 'r'))
         rows = [row for row in reader]
-        if len(row[0]) < len(self.config['Dimensions']):
+        if len(row[0]) < len(self.config['dimensions']):
             raise DataProcessingException('Fewer dimensions were specified in the config than exist in the data')
         formatted_rows = []
         for row in rows:
             formatted_rows.append(self.format_func(row))
-        self.data = formatted_rows
+        self.data = sorted(formatted_rows, key=lambda x: x[0])
         self.procrustes()
 
     def procrustes(self):
@@ -46,13 +40,67 @@ class DataProcessor:
         for i in range(len(self.data[0])):
             if self.config['column_types'][i] != 'continuous':
                 continue
-            c_max, c_min = self.sound_bank[self.config['dimensions'][i]].values
+            c_max, c_min = self.sound_bank[self.config['dimensions'][i]]['values']
             this_column = np.array([row[i] for row in self.data])
             this_column -= this_column.min()
-            this_column *= (c_max - c_min) / this_column.max()
+            if this_column.max() > 0:
+                this_column *= (c_max - c_min) / this_column.max()
             this_column += c_min
             for j, row in enumerate(self.data):
                 row[i] = this_column[j]
+
+    def send_data(self, time_stretch_interval, play_window=[0, 1]):
+        """Send a portion of the loaded data to the sound engine via the EventSender
+            the time_stretch_interval specifies how long (in seconds) that the portion should take to play
+            the play_window specifies the portion of data to play, the default is to play all the data"""
+            #TODO Implement the windowing functionality
+        time_column = [row[0] for row in self.data]
+        if self.config['column_types'][0] == 'datetime':
+            #Currently discriminating at 1s resolution TODO: add ms or microseconds
+            time_column = [(this_time - time_column[0]).total_seconds() for this_time in time_column]
+        tcol_array = np.array(time_column)
+        tcol_array -= tcol_array[0]
+        if tcol_array[-1] > 0:
+            tcol_array *= (time_stretch_interval / tcol_array[-1])
+        i = 0
+        start_t = time.time()
+        time.sleep(self.chunk_interval)
+        this_t = time.time()
+        tdiff = this_t - start_t
+        while True:
+            this_event_bundle = {}
+            while i < len(self.data):
+                if tcol_array[i] > tdiff:
+                    break
+                row_tuple = tuple(self.data[i][1:])
+                if row_tuple in this_event_bundle:
+                    this_event_bundle[row_tuple]['volume'] += 1
+                else:
+                    this_event_bundle[row_tuple] = self._make_event_dict(self.data[i])
+                i += 1
+            for event in this_event_bundle.values():
+                self.event_sender.send_event(event)
+            if tdiff > time_stretch_interval:
+                break
+            after_event_t = time.time()
+            if (after_event_t - this_t) < self.chunk_interval:
+                time.sleep(self.chunk_interval - (after_event_t - this_t))
+            this_t = time.time()
+            tdiff = this_t - start_t
+
+    def _make_event_dict(self, event):
+        event_d = {}
+        for i in range(1, len(event)):
+            this_key = self.config['dimensions'][i]
+            this_key_dtype = self.config['column_types'][i]
+            this_value = None
+            if this_key_dtype == 'continuous':
+                this_value = str(event[i])
+            else:
+                this_value = self.sound_bank[this_key]['values'][event[i]]
+            event_d[this_key] = this_value
+        event_d['volume'] = 1
+        return event_d
 
     def _check_config(self):
         if self.config['column_types'][0] not in ['datetime', 'continuous']:
@@ -62,7 +110,7 @@ class DataProcessor:
             config_dtype = self.config['column_types'][i]
             if config_dtype == 'binary':
                 config_dtype = 'categorical'
-            config_dimension = self.config['dimensions'][i-1]
+            config_dimension = self.config['dimensions'][i]
             if config_dimension not in self.sound_bank:
                 raise DataProcessingException('Sound Dimension specified in the config does not exist in the \
                         sound bank file')
