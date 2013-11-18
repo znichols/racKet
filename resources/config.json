@@ -4,11 +4,7 @@
     "sound_bank_definitions_file": "../resources/sound_banks.json",
     "sound_bank": "synth_waves",
     "dimensions": ["datetime", "pitch", "wave_type", "modulation"],
-    "window_size": {
-    	"height" : 720,
-    	"width" : 1366
-    },
-    "bits" : 16,
+    "sound_bits" : -8,
     "sample_rate" : 44100,
-    "channels" : 2 
+    "channels" : 1 
 }

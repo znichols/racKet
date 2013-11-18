@@ -53,8 +53,11 @@ class DataProcessor:
         """Send a portion of the loaded data to the sound engine via the EventSender
             the time_stretch_interval specifies how long (in seconds) that the portion should take to play
             the play_window specifies the portion of data to play, the default is to play all the data"""
-            #TODO Implement the windowing functionality
-        time_column = [row[0] for row in self.data]
+        N = len(self.data)
+        if N == 0:
+            return
+        this_data = [self.data[i] for i in range(int(play_window[0]*N), int(play_window[1]*N))]
+        time_column = [row[0] for row in this_data]
         if self.config['column_types'][0] == 'datetime':
             #Currently discriminating at 1s resolution TODO: add ms or microseconds
             time_column = [(this_time - time_column[0]).total_seconds() for this_time in time_column]
@@ -69,14 +72,14 @@ class DataProcessor:
         tdiff = this_t - start_t
         while True:
             this_event_bundle = {}
-            while i < len(self.data):
+            while i < len(this_data):
                 if tcol_array[i] > tdiff:
                     break
-                row_tuple = tuple(self.data[i][1:])
+                row_tuple = tuple(this_data[i][1:])
                 if row_tuple in this_event_bundle:
                     this_event_bundle[row_tuple]['volume'] += 1
                 else:
-                    this_event_bundle[row_tuple] = self._make_event_dict(self.data[i])
+                    this_event_bundle[row_tuple] = self._make_event_dict(this_data[i])
                 i += 1
             for event in this_event_bundle.values():
                 self.event_sender.send_event(event)

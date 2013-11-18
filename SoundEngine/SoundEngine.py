@@ -113,9 +113,9 @@ def main():
         print "Usage: %s <configfile> [num_events]" % sys.argv[0]
         sys.exit(-1)
 
-    pygame.mixer.init(44100, -8, 1, 1024)
     configfile = sys.argv[1]
     config = json.load(open(configfile, 'r'))
+    pygame.mixer.init(config['sample_rate'], config['sound_bits'], config['channels'], 1024)
     sound_player = SoundPlayer(config)
     buffer_scheduler = SoundBufferScheduler(sound_player)
     buffer_scheduler.start()
