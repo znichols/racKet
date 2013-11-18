@@ -10,12 +10,12 @@ Tweeter is a library for transforming data events into audio. The purpose of thi
   * a data event that makes a threshold could fire multiple sounds to give a better context
 
 
-To get the server running:
-    cd SoundEngine
+To get the server running: <br/>
+    cd SoundEngine <br/>
     python SoundEngine.py ../resources/config.json
 
-To run the Video Capture Client
-    cd DataProcessor
+To run the Video Capture Client <br/>
+    cd DataProcessor <br/>
     python VideoClient.py ../resources/config.json
 
 stop with ctrl-C
