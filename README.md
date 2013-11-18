@@ -11,12 +11,12 @@ Tweeter is a library for transforming data events into audio. The purpose of thi
 
 
 To get the server running:
-cd SoundEngine
-python SoundEngine.py ../resources/config.json
+    cd SoundEngine
+    python SoundEngine.py ../resources/config.json
 
 To run the Video Capture Client
-cd DataProcessor
-python VideoClient.py ../resources/config.json
+    cd DataProcessor
+    python VideoClient.py ../resources/config.json
 
 stop with ctrl-C
 
