@@ -9,7 +9,7 @@
         "wave_type":
         {
             "type": "categorical",
-            "values" : ["square", "triangle", "sine"]
+            "values" : ["square", "sawtooth", "sine"]
         },
         "modulation":
         {

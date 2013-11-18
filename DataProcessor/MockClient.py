@@ -9,7 +9,7 @@ def main():
     port = config['socket_port']
     event_sender = EventSender.EventSender(port)
     event_sender.send_string_event(sys.argv[2])
-    event_sender.send_exit_event()
+    #event_sender.send_exit_event()
 
 if __name__=='__main__':
     main()
