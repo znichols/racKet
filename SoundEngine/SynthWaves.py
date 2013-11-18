@@ -7,19 +7,19 @@ from scipy import signal
 def generate_sine(sound_description):
     n_samples = int(round(0.2 * 44100))
     f_multiplier = float(sound_description['pitch']) * 2. * np.pi
-    waveform = np.sin(np.arange(0, f_multiplier, f_multiplier / n_samples)) * 80
+    waveform = np.sin(np.arange(0, f_multiplier, f_multiplier / n_samples)) * 10
     return waveform.astype('int16')
 
 def generate_square(sound_description):
     n_samples = int(round(0.2 * 44100))
     f_multiplier = float(sound_description['pitch']) * 2. * np.pi
-    waveform = signal.square(np.arange(0, f_multiplier, f_multiplier / n_samples)) * 80
+    waveform = signal.square(np.arange(0, f_multiplier, f_multiplier / n_samples)) * 10
     return waveform.astype('int16')
 
 def generate_sawtooth(sound_description):
     n_samples = int(round(0.2 * 44100))
     f_multiplier = float(sound_description['pitch']) * 2. * np.pi
-    waveform = signal.sawtooth(np.arange(0, f_multiplier, f_multiplier / n_samples)) * 80
+    waveform = signal.sawtooth(np.arange(0, f_multiplier, f_multiplier / n_samples)) * 10
     return waveform.astype('int16')
 
 wave_type_map = {'sine': generate_sine, 'sawtooth': generate_sawtooth, 'square': generate_square}
