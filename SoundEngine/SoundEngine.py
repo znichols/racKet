@@ -38,12 +38,12 @@ class SoundPlayer:
     def send_buffer_to_pygame(self):
         if self.n_events > 0:
             sound_array = self.buffer
-            self.buffer = np.zeros(44100, dtype='int16')
-            sound_array[sound_array < 0] = 0
-            sound_array[sound_array > 255] = 255
+            sound_array[sound_array < -128] = -128
+            sound_array[sound_array > 128] = 128
             sound = pygame.sndarray.make_sound(sound_array.astype('uint8'))
             sound.play()
             self.n_events = 0
+            self.buffer = np.zeros(44100, dtype='int16')
         self.buffer_start_t = time.time()
 
     def make_sound_waveform(self, sound_description):
@@ -119,9 +119,6 @@ def main():
     sound_player = SoundPlayer(config)
     buffer_scheduler = SoundBufferScheduler(sound_player)
     buffer_scheduler.start()
-
-    #time.sleep(5)
-    #buffer_scheduler.stop()
 
     host = socket.gethostname()
     port = config['socket_port']
