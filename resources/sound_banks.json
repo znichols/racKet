@@ -4,12 +4,12 @@
         "pitch":
         {
             "type" : "categorical",
-            "values" : ["587.3", "659.3", "740.0", "880.0", "987.8", "1174.7"]
+            "values" : ["146.8", "164.8", "185.0", "220.0", "247.", "293.7"]
         },
         "wave_type":
         {
             "type": "categorical",
-            "values" : ["square", "sawtooth", "sine"]
+            "values" : ["sine", "sawtooth", "square"]
         },
         "modulation":
         {

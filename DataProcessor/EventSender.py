@@ -21,6 +21,7 @@ class EventSender:
 
     def send_event(self, json_event):
         str_event = json.dumps(json_event)
+        print str_event
         self.socket.send(str_event + '#')
     def send_string_event(self, string_event):
         self.socket.send(string_event + '#') 

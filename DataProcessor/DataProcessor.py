@@ -89,7 +89,7 @@ class DataProcessor:
             tdiff = this_t - start_t
 
     def _make_event_dict(self, event):
-        event_d = {}
+        event_d = {'sound_bank': self.config['sound_bank'], 'features': {}}
         for i in range(1, len(event)):
             this_key = self.config['dimensions'][i]
             this_key_dtype = self.config['column_types'][i]
@@ -98,7 +98,7 @@ class DataProcessor:
                 this_value = str(event[i])
             else:
                 this_value = self.sound_bank[this_key]['values'][event[i]]
-            event_d[this_key] = this_value
+            event_d['features'][this_key] = this_value
         event_d['volume'] = 1
         return event_d
 
