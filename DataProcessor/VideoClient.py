@@ -15,9 +15,9 @@ class VideoClient:
 
         sound_banks = json.load(open(self.config['sound_bank_definitions_file'], 'r'))
         self.sound_bank = sound_banks[self.config['sound_bank']]
-        self.update_interval = 0.1 #time in s to wait between sending bursts. Shouldn't make this too small
+        self.update_interval = 0.066 #time in s to wait between sending bursts. Shouldn't make this too small
         self.capture = capture
-        self.sound_cutoff = 50.
+        self.sound_cutoff = 30.
     def hear_some_video(self):
         frame_num = 0
         frame = None
@@ -55,6 +55,10 @@ class VideoClient:
         return event_d
 
 def main():
+    if len(sys.argv) < 2:
+        print "Usage: %s <configfile>" % sys.argv[0]
+        sys.exit(-1)
+
     cv.NamedWindow("Video", cv.CV_WINDOW_AUTOSIZE)
     capture = cv.CaptureFromCAM(0)
     cv.WaitKey(5)

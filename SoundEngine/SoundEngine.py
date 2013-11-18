@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import pygame
-import socket, asyncore, sys, time
+import socket, asyncore, sys, time, signal
 import simplejson as json
 import numpy as np
 from threading import Timer, Thread
@@ -110,7 +110,7 @@ class SoundServer(asyncore.dispatcher):
 
 def main():
     if len(sys.argv) < 2:
-        print "Usage: %s <configfile> [num_events]" % sys.argv[0]
+        print "Usage: %s <configfile>" % sys.argv[0]
         sys.exit(-1)
 
     configfile = sys.argv[1]
@@ -119,6 +119,11 @@ def main():
     sound_player = SoundPlayer(config)
     buffer_scheduler = SoundBufferScheduler(sound_player)
     buffer_scheduler.start()
+
+    def exit_handler(signal, frame):
+        buffer_scheduler.stop()
+        sys.exit(0)
+    signal.signal(signal.SIGINT, exit_handler)
 
     host = socket.gethostname()
     port = config['socket_port']
