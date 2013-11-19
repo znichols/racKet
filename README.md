@@ -1,10 +1,8 @@
-
-
-
 racKet
 =======
 
 A library to transform events into sounds 
+
 
 RacKet is a library for transforming data events into audio. The purpose of this library is to provide a simiple and usuable tool that empowers developers and scientists to hear their data. This could be useful in multiple ways:
 
@@ -15,7 +13,7 @@ RacKet is a library for transforming data events into audio. The purpose of this
   * a data event that makes a threshold could fire multiple sounds to give a better context
 
 # Setup dependencies:
-=======
+
 ```bash
 # pre requisites for pygame
 brew install sdl sdl_image sdl_mixer sdl_ttf portmidi 
@@ -29,12 +27,9 @@ pip install hg+http://bitbucket.org/pygame/pygame
 brew tap homebrew/science
 # this is kinda big
 brew install opencv
-
-
 ```
 
 # running racKet Server Instructions
-=======
 ```bash
 cd SoundEngine/
 python SoundEngine.py ../resources/config.json
@@ -43,7 +38,6 @@ python SoundEngine.py ../resources/config.json
 ```
 
 # To run the Video Capture Client
-=======
 ```bash
 cd ../DataProcessor
 python VideoClient.py ../resources/config.json
