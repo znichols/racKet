@@ -49,7 +49,7 @@ python VideoClient.py ../resources/config.json
 ```bash
 ipython
 ```
-## In python you can run the following script
+### In python you can run the following script
 ```python
 # See DataProcessor.py for the csv data client
 
