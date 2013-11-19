@@ -45,11 +45,11 @@ python VideoClient.py ../resources/config.json
 ```
 
 # To run a csv client interactively
-## start at the root of the project and run ipython or python
+**start at the root of the project and run ipython or python**
 ```bash
 ipython
 ```
-### In python you can run the following script
+**In python you can run the following script** 
 ```python
 # See DataProcessor.py for the csv data client
 
